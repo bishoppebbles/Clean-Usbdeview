@@ -2,7 +2,7 @@
 .SYNOPSIS
     By default this script removes unwanted columns and USB registry entries based on their device driver from TSV formatted NirSoft USBDeview data.  It outputs a "clean" CSV file for futher spreadsheet analysis.  Yes, this is the same as manually deleting or hiding all those columns and manually filtering out all those device drivers in spreadsheet software.
 .DESCRIPTION
-    This script removes the following records that have these device drivers: a38ccid.sys, acr3801.sys, amdhub30.sys, cxbu0x64.sys, dlsusb.sys, hidusb.sys, idUsb.sys, iusb3hub.sys, LSCANUsbamd64.sys, usb8023x.sys, usbccgp.sys, usbser.sys, WinUSB.SYS.  It also removes records that have WUDFRd.sys driver and are smartcard related.
+    This script removes the following records that have these device drivers: a38ccid.sys, acr3801.sys, amdhub30.sys, amdhub31.sys, cxbu0x64.sys, dlsusb.sys, hidusb.sys, idUsb.sys, iusb3hub.sys, LSCANUsbamd64.sys, usb8023x.sys, usbccgp.sys, usbser.sys, WinUSB.SYS.  It also removes records that have WUDFRd.sys driver and are smartcard related.
 
     Options exist to remove devices related to printing and scanning as well as to remove any unknown record type that has no device driver data.
     
@@ -11,8 +11,10 @@
     This script removes the following USBDeview columns: Device Name, Connected, Safe To Unplug, Disabled, USB Hub, Created Date, Firmware Revision, USB Class, USB SubClass, USB Protocol, Hub / Port, Product Name, ParentId Prefix, Friendly Name, Power, USB Version, Driver Version, Driver InfSection, Driver InfPath, Instance ID, Capabilities
 
     The cleaned USBDeview output file is called 'USBDeview_So_Fresh_And_So_Clean_Clean.csv'.
-.PARAMETER TsvData
-    The name of the USBDeview TSV output file.
+.PARAMETER TsvInputFile
+    The file name of the USBDeview TSV output file.
+.PARAMETER CsvOutputFile
+    The file name of the cleaned USBDeview CSV output file (default: USBDeview_So_Fresh_And_So_Clean_Clean.csv)
 .PARAMETER RemovePrintersScanners
     If this switch is used it removes records that contain the generic printer (Dot4.sys, usbprint.sys) and scan (usbscan.sys) drivers.
 .PARAMETER RemoveNoDriver
@@ -20,7 +22,7 @@
 .NOTES
     Version 1.0
     Sam Pursglove
-    Last Modified: 11 JUL 2018
+    Last Modified: 23 JUL 2018
 .EXAMPLE
     Clean-Usbdeview.ps1 .\usbdeview_data.tsv
 #>
@@ -31,7 +33,13 @@ Param
                Mandatory=$true,
                ValueFromPipeline=$false,
                HelpMessage='Filename of the USBDeview TSV output file.')]
-    [string]$TsvFile,
+    [string]$TsvInputFile,
+
+    [Parameter(Position=1,
+               Mandatory=$false,
+               ValueFromPipeline=$false,
+               HelpMessage='Filename of the cleaned USBDeview output CSV file.')]
+    [string]$CsvOutputFile = "USBDeview_So_Fresh_And_So_Clean_Clean.csv",
 
     [Parameter(Mandatory=$false,
                ValueFromPipeline=$false,
@@ -44,12 +52,13 @@ Param
     [switch]$RemoveNoDriver
 )
 
-$TsvData = Import-Csv $TsvFile -Delimiter `t
+$TsvData = Import-Csv $TsvInputFile -Delimiter `t
 
 Write-Output `n'Removing records that use the following device drivers:'
 Write-Output `t'a38ccid.sys'
 Write-Output `t'acr3801.sys'
 Write-Output `t'amdhub30.sys'
+Write-Output `t'amdhub31.sys'
 Write-Output `t'cxbu0x64.sys'
 Write-Output `t'dlsusb.sys'
 Write-Output `t'hidusb.sys'
@@ -63,7 +72,7 @@ Write-Output `t'usbhub.sys'
 Write-Output `t'UsbHub3.sys'
 Write-Output `t'WinUSB.SYS'
 
-$removeDrivers = $TsvData | Where-Object { ($_.('Driver Filename') -notmatch "a38ccid.sys|acr3801.sys|amdhub30.sys|cxbu0x64.sys|dlsusb.sys|hidusb.sys|idUsb.sys|iusb3hub.sys|LSCANUsbamd64.sys|usb8023x.sys|usbccgp.sys|usbser.sys|usbhub.sys|usbhub3.sys|WinUSB.SYS") } 
+$removeDrivers = $TsvData | Where-Object { ($_.('Driver Filename') -notmatch "a38ccid.sys|acr3801.sys|amdhub30.sys|amdhub31.sys|cxbu0x64.sys|dlsusb.sys|hidusb.sys|idUsb.sys|iusb3hub.sys|LSCANUsbamd64.sys|usb8023x.sys|usbccgp.sys|usbser.sys|usbhub.sys|usbhub3.sys|WinUSB.SYS") } 
 
 
 Write-Output `n'Removing smartcard related records with the WUDFRd.sys driver'
@@ -113,6 +122,6 @@ $removeColumns = $removeDrivers | Select-Object 'Description','Device Type','Dri
 
 Write-Output `n'Writing the cleaned USBDeview data to a CSV file'
 
-$removeColumns | Export-Csv -Path USBDeview_So_Fresh_And_So_Clean_Clean.csv -NoTypeInformation
+$removeColumns | Export-Csv -Path $CsvOutputFile -NoTypeInformation
 
 # TO DO: perform an automatic lookup for the VendorID and ProductID fields from the usb.ids list
