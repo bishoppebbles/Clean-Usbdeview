@@ -26,7 +26,7 @@
 .NOTES
     Version 1.0
     Sam Pursglove
-    Last Modified: 26 JUL 2018
+    Last Modified: 27 JUL 2018
 .EXAMPLE
     Clean-Usbdeview.ps1 -TsvInputFile .\usbdeview_data.tsv
 
@@ -43,38 +43,31 @@
 
 Param 
 (
-    [Parameter(Position = 0,
-               Mandatory = $true,
-               ValueFromPipeline = $false,
-               HelpMessage = 'Filename of the USBDeview TSV output file.')]
-    [string]$TsvInputFile,
+    [Parameter(Position = 0, Mandatory = $true, ValueFromPipeline = $false, HelpMessage = 'Filename of the USBDeview TSV output file.')]
+    [string]
+    $TsvInputFile,
 
-    [Parameter(Position = 1,
-               Mandatory = $false,
-               ValueFromPipeline = $false,
-               HelpMessage ='Filename of the cleaned USBDeview output CSV file.')]
-    [string]$CsvOutputFile = "USBDeview_Cleaned_Output.csv",
+    [Parameter(Position = 1, Mandatory = $false, ValueFromPipeline = $false, HelpMessage ='Filename of the cleaned USBDeview output CSV file.')]
+    [string]
+    $CsvOutputFile = "USBDeview_Cleaned_Output.csv",
 
-    [Parameter(Mandatory = $false,
-               ValueFromPipeline = $false,
-               HelpMessage = 'Enable this switch to remove records related to generic printer and scanner drivers.')]
-    [switch]$RemovePrintersScanners,
+    [Parameter(Mandatory = $false, ValueFromPipeline = $false, HelpMessage = 'Enable this switch to remove records related to generic printer and scanner drivers.')]
+    [switch]
+    $RemovePrintersScanners,
     
-    [Parameter(Mandatory = $false,
-               ValueFromPipeline = $false,
-               HelpMessage = 'Enable this switch to remove unknown record types that have no driver data.')]
-    [switch]$RemoveNoDriver,
+    [Parameter(Mandatory = $false, ValueFromPipeline = $false, HelpMessage = 'Enable this switch to remove unknown record types that have no driver data.')]
+    [switch]
+    $RemoveNoDriver,
 
-    [Parameter(Mandatory = $false,
-               ValueFromPipeline = $false,
-               HelpMessage = 'Enter the date of the oldest record you wish to return in the MM/DD/YYYY format.')]
-    [datetime]$OldestDate,
+    [Parameter(Mandatory = $false, ValueFromPipeline = $false, HelpMessage = 'Enter the date of the oldest record you wish to return in the MM/DD/YYYY format.')]
+    [datetime]
+    $OldestDate,
 
-    [Parameter(Mandatory = $false,
-               ValueFromPipeline = $false,
-               HelpMessage = 'Enter the date of the newest record you wish to return in the MM/DD/YYYY format.')]
-    [datetime]$NewestDate
+    [Parameter(Mandatory = $false, ValueFromPipeline = $false, HelpMessage = 'Enter the date of the newest record you wish to return in the MM/DD/YYYY format.')]
+    [datetime]
+    $NewestDate
 )
+
 
 $TsvData = Import-Csv $TsvInputFile -Delimiter `t
 
