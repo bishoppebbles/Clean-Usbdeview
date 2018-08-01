@@ -150,9 +150,8 @@ if ($RemoveNoDriver) {
 if (($OldestDate -ne $null) -or ($NewestDate -ne $null)) {
 
     $removeDevices | ForEach-Object { 
-    
-            $_.'Last Plug/Unplug Date' -match "(?<Month>\d{1,2})/(?<Day>\d{1,2})/(?<Year>\d{4})" | Out-Null
-            $_.'Last Plug/Unplug Date' = [datetime]"$($Matches.Month)/$($Matches.Day)/$($Matches.Year)"
+            
+            $_.'Last Plug/Unplug Date' = [datetime]$_.'Last Plug/Unplug Date'
         }
 
     # filter records that are older than a user specified date
