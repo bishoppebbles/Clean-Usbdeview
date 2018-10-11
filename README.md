@@ -1,8 +1,8 @@
 # Clean-Usbdeview
 
-## Running USBDeview
-
 This is a script to remove unwanted USB devices and data fields from the TSV output of the [NirSoft USBDeview software](https://www.nirsoft.net/utils/usb_devices_view.html).
+
+## Running USBDeview
 
 The USBDeview documentation has many command line options.  This is the commandprompt options I primarily use when running this program (note: things between the < > need to be your actual files):
 
